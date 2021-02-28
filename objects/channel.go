@@ -1,6 +1,9 @@
 package objects
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 // Snowflake discord ID
 type Snowflake string
@@ -57,12 +60,22 @@ type Message struct {
 	Tts             bool        `json:"tts"`
 	MentionEveryone bool        `json:"mention_everyone"`
 	//todo check docs
-	Mentions          []User           `json:"mentions"`
-	MentionedRoles    []Role           `json:"mention_roles"`
-	MentionedChannels []ChannelMention `json:"mention_channels,omitempty"`
-	Attachments       []Attachment     `json:"attachments"`
-	Embeds            []Embed          `json:"embeds"`
-	Reactions         []Reaction       `json:"reactions,omitempty"`
+	Mentions          []User             `json:"mentions"`
+	MentionedRoles    []Role             `json:"mention_roles"`
+	MentionedChannels []ChannelMention   `json:"mention_channels,omitempty"`
+	Attachments       []Attachment       `json:"attachments"`
+	Embeds            []Embed            `json:"embeds"`
+	Reactions         []Reaction         `json:"reactions,omitempty"`
+	Nonce             json.Number        `json:"nonce,omitempty"`
+	IsPinned          bool               `json:"pinned"`
+	WebhookID         Snowflake          `json:"webhook_id,omitempty"`
+	Type              MessageType        `json:"type"`
+	Activity          MessageActivity    `json:"activity,omitempty"`
+	Application       MessageApplication `json:"application,omitempty"`
+	MessageReference  MessageReference   `json:"message_reference,omitempty"`
+	Flags             MessageFlag        `json:"flags,omitempty"`
+	Stickers          []Sticker          `json:"stickers,omitempty"`
+	ReferencedMessage *Message            `json:"referenced_message,omitempty"`
 }
 
 // ChannelMention Channel Mention Object
@@ -172,6 +185,98 @@ type Reaction struct {
 	IReacted bool   `json:"me"`
 	Emoji    Emoji  `json:"emoji"`
 }
+
+// MessageType specifies the Message Type
+type MessageType uint8
+
+// Message Types
+const (
+	MessageTypeDefault                           MessageType = 0
+	MessageTypeRecipientAdd                      MessageType = 1
+	MessageTypeRecipientRemove                   MessageType = 2
+	MessageTypeCall                              MessageType = 3
+	MessageTypeChannelNameChange                 MessageType = 4
+	MessageTypeChannelIconChange                 MessageType = 5
+	MessageTypeChannelPinnedMessage              MessageType = 6
+	MessageTypeGuildMemberJoin                   MessageType = 7
+	MessageTypeUserPremiumGuildSubscription      MessageType = 8
+	MessageTypeUserPremiumGuildSubscriptionTier1 MessageType = 9
+	MessageTypeUserPremiumGuildSubscriptionTier2 MessageType = 10
+	MessageTypeUserPremiumGuildSubscriptionTier3 MessageType = 11
+	MessageTypeChannelFollowAdd                  MessageType = 12
+	MessageTypeGuildDiscoveryDisqualified        MessageType = 14
+	MessageTypeGuildDiscoveryRequalified         MessageType = 15
+	MessageTypeReply                             MessageType = 19
+	MessageTypeApplicationCommand                MessageType = 20
+)
+
+// MessageActivity Message Activity Object
+type MessageActivity struct {
+	Type    MessageActivityType `json:"type"`
+	PartyID string              `json:"party_id,omitempty"`
+}
+
+// MessageActivityType specifies the Message Activity Type
+type MessageActivityType int
+
+// Message Activity Types
+const (
+	MessageActivityJoin        MessageActivityType = 1
+	MessageActivitySpectate    MessageActivityType = 2
+	MessageActivityListening   MessageActivityType = 3
+	MessageActivityJoinRequest MessageActivityType = 5
+)
+
+// MessageApplication Message Application Object
+type MessageApplication struct {
+	ID          Snowflake `json:"id"`
+	CoverImage  string    `json:"cover_image,omitempty"`
+	Description string    `json:"description"`
+	Icon        string    `json:"icon"`
+	Name        string    `json:"name"`
+}
+
+// MessageReference Message Reference Object
+type MessageReference struct {
+	MessageID       Snowflake `json:"message_id,omitempty"`
+	ChannelID       Snowflake `json:"channel_id,omitempty"`
+	GuildID         Snowflake `json:"guild_id,omitempty"`
+	FailIfNotExists bool      `json:"fail_if_not_exists,omitempty"`
+}
+
+// MessageFlag specifies Message Flags
+type MessageFlag int
+
+// Message Flags
+const (
+	MessageFlagCrossposted          MessageFlag = 1 << 0
+	MessageFlagIsCrosspost                      = 1 << 1
+	MessageFlagSuppressEmbeds                   = 1 << 2
+	MessageFlagSourceMessageDeleted             = 1 << 3
+	MessageFlagUrgent                           = 1 << 4
+)
+
+// Sticker A Message Sticker
+type Sticker struct {
+	ID               Snowflake         `json:"id"`
+	PackID           Snowflake         `json:"pack_id"`
+	Name             string            `json:"name"`
+	Description      string            `json:"description"`
+	Tags             string            `json:"tags,omitempty"`
+	AssetHash        string            `json:"asset"`
+	PreviewAssetHash string            `json:"preview_asset"`
+	FormatType       StickerFormatType `json:"format_type"`
+}
+
+// StickerFormatType specifies the Sticker Format Type
+type StickerFormatType uint8
+
+// Sticker Format Types
+const (
+	StickerFormatTypePNG    StickerFormatType = 1
+	StickerFormatTypeAPNG   StickerFormatType = 2
+	StickerFormatTypeLOTTIE StickerFormatType = 3
+)
 
 // ToReadableTime turns the ISO8601 timestamp to something that is easier to read
 func (t Timestamp) ToReadableTime() string {
