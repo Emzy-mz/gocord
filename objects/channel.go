@@ -75,7 +75,7 @@ type Message struct {
 	MessageReference  MessageReference   `json:"message_reference,omitempty"`
 	Flags             MessageFlag        `json:"flags,omitempty"`
 	Stickers          []Sticker          `json:"stickers,omitempty"`
-	ReferencedMessage *Message            `json:"referenced_message,omitempty"`
+	ReferencedMessage *Message           `json:"referenced_message,omitempty"`
 }
 
 // ChannelMention Channel Mention Object
@@ -276,6 +276,30 @@ const (
 	StickerFormatTypePNG    StickerFormatType = 1
 	StickerFormatTypeAPNG   StickerFormatType = 2
 	StickerFormatTypeLOTTIE StickerFormatType = 3
+)
+
+// FollowedChannel Followed Channel Object
+type FollowedChannel struct {
+	ChannelID Snowflake `jsonn:"channel_id"`
+	WebhookID Snowflake `json:"webhook_id"`
+}
+
+// AllowedMentions Allowed Mentions Object
+type AllowedMentions struct {
+	Parse       []AllowedMentionType `json:"parse"`
+	Roles       []Snowflake          `json:"roles"`
+	Users       []Snowflake          `json:"users"`
+	RepliedUser bool                 `json:"replied_user"`
+}
+
+// AllowedMentionType specifies Allowed Mention Types
+type AllowedMentionType string
+
+// Allowed Mention Types
+const (
+	AllowedMentionTypeRoleMentions     AllowedMentionType = "roles"
+	AllowedMentionTypeUserMentions     AllowedMentionType = "users"
+	AllowedMentionTypeEveryoneMentions AllowedMentionType = "everyone"
 )
 
 // ToReadableTime turns the ISO8601 timestamp to something that is easier to read
