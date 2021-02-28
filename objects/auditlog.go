@@ -4,10 +4,10 @@ import "encoding/json"
 
 // AuditLog Audit Log object
 type AuditLog struct {
-	Webhooks []Webhook `json:"webhooks"`
-	Users    []User    `json:"user"`
-	Entries []AuditLogEntry `json:"audit_log_entries"`
-	Integrations []Integration `json:"integrations"`
+	Webhooks     []Webhook       `json:"webhooks"`
+	Users        []User          `json:"user"`
+	Entries      []AuditLogEntry `json:"audit_log_entries"`
+	Integrations []Integration   `json:"integrations"`
 }
 
 // Webhook represents a webhook
